@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="max-w-6xl mx-auto p-6">
+        <h1 class="text-3xl font-bold text-blue-600 mb-6">Survey Dashboard</h1>
+        <p class="text-gray-600 mb-4">Total Responses: {{ responses.count }}</p>
+        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Bid Amounts by Question</h2>
+            <p class="text-gray-500 mb-4">This chart shows the bid amounts submitted for questions requiring a bid.</p>
+            <canvas id="bidChart" width="400" height="200"></canvas>
+        </div>
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Yes/No Responses by Question</h2>
+            <p class="text-gray-500 mb-4">This chart shows the count of Yes and No responses for each question.</p>
+            <canvas id="yesNoChart" width="400" height="200"></canvas>
+        </div>
+        <script>
+            const bidCtx = document.getElementById('bidChart').getContext('2d');
+            new Chart(bidCtx, {
+                type: 'bar',
+                data: {
+                    labels: [{% for bid in bid_data %}'{{ bid.question__text|slice:":30" }}',{% endfor %}],
+                    datasets: [{
+                        label: 'Bid Amounts (ETB)',
+                        data: [{% for bid in bid_data %}{{ bid.bid_amount|default:0 }},{% endfor %}],
+                        backgroundColor: 'rgba(37, 99, 235, 0.6)',
+                        borderColor: 'rgba(37, 99, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Amount (ETB)' } },
+                        x: { title: { display: true, text: 'Questions' } }
+                    },
+                    plugins: {
+                        legend: { display: true },
+                        title: { display: true, text: 'Bid Amounts Overview' }
+                    }
+                }
+            });
+            const yesNoCtx = document.getElementById('yesNoChart').getContext('2d');
+            new Chart(yesNoCtx, {
+                type: 'bar',
+                data: {
+                    labels: [{% for question, counts in yes_no_data.items %}'{{ question|slice:":30" }}',{% endfor %}],
+                    datasets: [
+                        {
+                            label: 'Yes',
+                            data: [{% for question, counts in yes_no_data.items %}{{ counts.yes }},{% endfor %}],
+                            backgroundColor: 'rgba(34, 197, 94, 0.6)',
+                            borderColor: 'rgba(34, 197, 94, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'No',
+                            data: [{% for question, counts in yes_no_data.items %}{{ counts.no }},{% endfor %}],
+                            backgroundColor: 'rgba(239, 68, 68, 0.6)',
+                            borderColor: 'rgba(239, 68, 68, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Response Count' } },
+                        x: { title: { display: true, text: 'Questions' } }
+                    },
+                    plugins: {
+                        legend: { display: true },
+                        title: { display: true, text: 'Yes/No Response Distribution' }
+                    }
+                }
+            });
+        </script>
+    </div>
+{% endblock %}

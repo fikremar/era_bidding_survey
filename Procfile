@@ -1,0 +1,1 @@
+web: gunicorn bidding_survey.wsgi --log-file -

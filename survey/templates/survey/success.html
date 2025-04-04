@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="max-w-4xl mx-auto p-6 text-center">
+        <h1 class="text-3xl font-bold text-green-600 mb-4">Submission Successful!</h1>
+        <p class="text-gray-600 mb-6">Thank you for completing the survey.</p>
+        <a href="{% url 'survey_list' %}" class="bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition duration-200">Back to Surveys</a>
+    </div>
+{% endblock %}

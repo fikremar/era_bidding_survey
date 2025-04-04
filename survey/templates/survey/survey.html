@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="bg-white shadow-md rounded-lg p-6 max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-blue-600 mb-4">{{ survey.title }}</h1>
+        <p class="text-gray-600 mb-6">You can submit this survey anonymously. Login is not required.</p>
+        {% if errors %}
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6">
+                <p class="font-bold">Please correct the following errors:</p>
+                <ul class="list-disc ml-5">
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+            {% for question in questions %}
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+                    <p class="font-semibold text-lg text-gray-800">{{ question.text }}</p>
+                    <div class="mt-2">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="yes_no_{{ question.id }}" value="True" class="form-radio text-blue-500 yes-no" data-question-id="{{ question.id }}" required>
+                            <span class="ml-2">Yes</span>
+                        </label>
+                        <label class="inline-flex items-center ml-6">
+                            <input type="radio" name="yes_no_{{ question.id }}" value="False" class="form-radio text-blue-500 yes-no" data-question-id="{{ question.id }}">
+                            <span class="ml-2">No</span>
+                        </label>
+                    </div>
+                    {% if question.has_text_response %}
+                        <textarea name="text_{{ question.id }}" class="w-full mt-3 p-2 border rounded-md focus:ring-2 focus:ring-blue-500 text-input" placeholder="Your opinion" rows="3" required></textarea>
+                    {% elif question.text_required_if_yes %}
+                        <textarea name="text_{{ question.id }}" class="w-full mt-3 p-2 border rounded-md focus:ring-2 focus:ring-blue-500 text-input" placeholder="Your opinion" rows="3" style="display: none;"></textarea>
+                    {% endif %}
+                    {% if question.has_bid %}
+                        <input type="number" name="bid_{{ question.id }}" class="w-full mt-3 p-2 border rounded-md focus:ring-2 focus:ring-blue-500" placeholder="Bid Amount (ETB)" min="1" required>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition duration-200">Submit Survey</button>
+        </form>
+    </div>
+    <script>
+        document.querySelectorAll('.yes-no').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const questionId = this.dataset.questionId;
+                const textInput = document.querySelector(`textarea[name="text_${questionId}"]`);
+                if (textInput && textInput.classList.contains('text-input')) {
+                    if (this.value === 'True') {
+                        textInput.style.display = 'block';
+                        textInput.required = true;
+                    } else {
+                        textInput.style.display = 'none';
+                        textInput.required = false;
+                        textInput.value = ''; // Clear when hidden
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

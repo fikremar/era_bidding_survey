@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="max-w-4xl mx-auto p-6">
+        <h1 class="text-3xl font-bold text-blue-600 mb-6">ERA Bidding Surveys</h1>
+        <p class="text-gray-600 mb-4">Please select a survey to complete:</p>
+        <div class="space-y-4">
+            {% for survey in surveys %}
+                <a href="{% url 'survey' survey.id %}" class="block bg-white p-4 rounded-lg shadow-md hover:bg-blue-50 transition duration-200">
+                    <h2 class="text-xl font-semibold text-blue-600">{{ survey.title }}</h2>
+                    <p class="text-gray-500">Created on: {{ survey.created_at|date:"F d, Y" }}</p>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
