@@ -1,1 +1,1 @@
-web: gunicorn bidding_survey.wsgi --log-file -
+web: gunicorn bidding_survey.wsgi:application

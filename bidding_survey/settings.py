@@ -87,16 +87,16 @@ WSGI_APPLICATION = 'bidding_survey.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'era_bidding_db',
-        'USER': 'bid_user',
-        'PASSWORD': '123@Fikir',  # Replace with your password
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'era_bidding_db',
+#         'USER': 'bid_user',
+#         'PASSWORD': '123@Fikir',  # Replace with your password
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 # Database configuration for Render
 DATABASES = {
